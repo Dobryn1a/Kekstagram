@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Дмитрий Баранов](https://up.htmlacademy.ru/javascript/16/user/842961).
-* Наставник: [Дмитрий Баранов](https://htmlacademy.ru/profile/js_ninja).
+* Наставник: [Мария Филиппова](https://htmlacademy.ru/profile/js_ninja).
 
 ---
 
