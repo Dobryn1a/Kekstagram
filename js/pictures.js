@@ -60,11 +60,11 @@ function generatePhotos() {
   }
 }
 
-// Предсталвение url в .picture
-pictureImg = photos[i].url;
+// Предсталвение url как src в .picture
+pictureImg = photos.url;
 
 // Предсталвение likes в .picture__likes
-pictureLikes.textContent = photos[i].likes;
+pictureLikes.textContent = photos.likes;
 
 // Представление comments как .picture__comments
-pictureComments.textContent = photos[i].comments;
+pictureComments.textContent = photos.comments;
