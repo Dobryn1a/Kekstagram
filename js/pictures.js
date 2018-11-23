@@ -15,6 +15,13 @@ var pictureTemplate = document.querySelector('#picture').content.querySelector('
 var picturesBlock = document.querySelector('.pictures');
 var bigPicture = document.querySelector('.big-picture');
 bigPicture.classList.remove('hidden');
+var pictureImg = document.querySelector('.picture__img').src;
+var pictureLikes = document.querySelector('.picture__likes');
+var pictureComments = document.querySelector('.picture__comments');
+var socialLoader = document.querySelector('.comments-loader');
+var commentsCount = document.querySelector('.social__comment-count');
+socialLoader.classList.add('visually-hidden');
+commentsCount.classList.add('visually-hidden');
 
 for (var i = 1; i <= CONST; i++) {}
 
@@ -52,3 +59,12 @@ function generatePhotos() {
     };
   }
 }
+
+// Предсталвение url в .picture
+pictureImg = photos[i].url;
+
+// Предсталвение likes в .picture__likes
+pictureLikes.textContent = photos[i].likes;
+
+// Представление comments как .picture__comments
+pictureComments.textContent = photos[i].comments;
