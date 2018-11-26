@@ -10,10 +10,16 @@ var COMMENTS = ['Всё отлично!', 'В целом всё неплохо. 
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
 
 var PHOTOS_COUNT = 25;
-var MIN_COUNT = 15;
-var MAX_COUNT = 200;
-var FIRST_AVATAR = 1;
-var LAST_AVATAR = 6;
+
+var Likes = {
+  MIN: 15,
+  MAX: 200
+};
+
+var Avatar = {
+  MIN: 1,
+  MAX: 6
+};
 
 var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 var picturesBlock = document.querySelector('.pictures');
@@ -26,8 +32,6 @@ commentsCount.classList.add('visually-hidden');
 var commentTemplate = document.querySelector('#comment').content.querySelector('.social__comment');
 
 var photos = [];
-
-for (var i = 1; i <= PHOTOS_COUNT; i++) {}
 
 function getRandomNumber(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -58,7 +62,7 @@ function generatePhotos() {
   for (var i = 0; i < PHOTOS_COUNT; i++) {
     photos[i] = {
       url: 'photos/' + (i + 1) + '.jpg',
-      likes: getRandomNumber(MIN_COUNT, MAX_COUNT),
+      likes: getRandomNumber(Likes.MIN, Likes.MAX),
       comments: getСomments(5),
       description: getRandomElement(DESCRIPTIONS)
     };
@@ -77,8 +81,7 @@ function renderPhoto(photo) {
 
 var appendPhotos = function () {
   var fragment = document.createDocumentFragment();
-  for (var i = 0; i < photos.length; i++)
-  {
+  for (var i = 0; i < photos.length; i++) {
     fragment.appendChild(renderPhoto(photos[i]));
   }
   picturesBlock.appendChild(fragment);
@@ -88,17 +91,17 @@ appendPhotos(PHOTOS_COUNT);
 
 var createComment = function (comment) {
   var commentElement = commentTemplate.cloneNode(true);
-  commentElement.querySelector('.social__picture').src = 'img/avatar-' + getRandomNumber(FIRST_AVATAR, LAST_AVATAR) + '.svg';
+  commentElement.querySelector('.social__picture').src = 'img/avatar-' + getRandomNumber(Avatar.MIN, Avatar.MAX) + '.svg';
   commentElement.querySelector('.social__text').textContent = comment;
   return commentElement;
 };
 
-var appendBigComment = function () {
-  for (var i = 0; i < COMMENTS.length; i++) {
+var appendBigComment = function (commentElement) {
+  for (var i = 0; i < commentElement; i++) {
     var bigComments = document.querySelector('.social__comments');
     var bigComment = bigComments.createElement('li');
     bigComment.classList.add('social__comment');
-    bigComment.appendChild(createComment());
+    bigComment.appendChild(createComment(comment));
   }
   return bigComments;
 };
@@ -108,15 +111,14 @@ function openPhoto(photo) {
   openElement.querySelector('.big-picture__img').src = photo.url;
   openElement.querySelector('.likes-count').textContent = photo.likes;
   openElement.querySelector('.comments-count').textContent = photo.comments.length;
-  openElement.querySelector('.social__comments').textContent = appendBigComment();
+  openElement.querySelector('.social__comments').textContent = appendBigComment(bigComments);
   openElement.querySelector('.social__caption').textContent = photo.description;
   return openElement;
 }
 
 var appendPhoto = function () {
   var fragmentPhoto = document.createDocumentFragment();
-  for (var i = 0; i < photos.length; i++)
-  {
+  for (var i = 0; i < photos.length; i++) {
     fragmentPhoto.appendChild(openPhoto(photos[i]));
   }
   bigComments.appendChild(fragmentPhoto);
