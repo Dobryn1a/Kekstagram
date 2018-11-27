@@ -10,6 +10,7 @@ var COMMENTS = ['Всё отлично!', 'В целом всё неплохо. 
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
 
 var PHOTOS_COUNT = 25;
+var DISPLAY_COMMENTS = 5;
 
 var Likes = {
   MIN: 15,
@@ -95,11 +96,16 @@ var createComment = function (comment) {
   return commentElement;
 };
 
+
 var renderComments = function (comments) {
   var commentsList = bigPicture.querySelector('.social__comments');
   var fragment = document.createDocumentFragment();
-  for (var i = 0; i < comments; i++) {
-    fragment.appendChild(createComment(comments[i]));
+  for (var i = 0; i < comments.length; i++) {
+    var comment = createComment(comments[i]);
+    if (i >= DISPLAY_COMMENTS) {
+      comment.classList.add('visually-hidden');
+    }
+    fragment.appendChild(comment);
   }
   commentsList.appendChild(fragment);
 };
