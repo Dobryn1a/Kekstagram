@@ -79,7 +79,7 @@ function renderPhoto(photo) {
   return photoElement;
 }
 
-var appendPhotos = function () {
+function appendPhotos() {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < photos.length; i++) {
     fragment.appendChild(renderPhoto(photos[i]));
@@ -89,7 +89,7 @@ var appendPhotos = function () {
 
 appendPhotos();
 
-var createComment = function (comment) {
+function createComment(comment) {
   var commentElement = commentTemplate.cloneNode(true);
   commentElement.querySelector('.social__picture').src = 'img/avatar-' + getRandomNumber(Avatar.MIN, Avatar.MAX) + '.svg';
   commentElement.querySelector('.social__text').textContent = comment;
@@ -97,7 +97,7 @@ var createComment = function (comment) {
 };
 
 
-var renderComments = function (comments) {
+function renderComments(comments) {
   var commentsList = bigPicture.querySelector('.social__comments');
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < comments.length; i++) {
