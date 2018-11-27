@@ -85,7 +85,7 @@ function appendPhotos() {
     fragment.appendChild(renderPhoto(photos[i]));
   }
   picturesBlock.appendChild(fragment);
-};
+}
 
 appendPhotos();
 
@@ -94,7 +94,7 @@ function createComment(comment) {
   commentElement.querySelector('.social__picture').src = 'img/avatar-' + getRandomNumber(Avatar.MIN, Avatar.MAX) + '.svg';
   commentElement.querySelector('.social__text').textContent = comment;
   return commentElement;
-};
+}
 
 
 function renderComments(comments) {
@@ -108,7 +108,7 @@ function renderComments(comments) {
     fragment.appendChild(comment);
   }
   commentsList.appendChild(fragment);
-};
+}
 
 function renderBigPicture(photo) {
   bigPicture.querySelector('.big-picture__img').src = photo.url;
