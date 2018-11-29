@@ -25,7 +25,7 @@ var Avatar = {
 var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 var picturesBlock = document.querySelector('.pictures');
 var bigPicture = document.querySelector('.big-picture');
-bigPicture.classList.remove('hidden');
+var bigPictureCancel = bigPicture.querySelector('.big-picture__cancel');
 var socialLoader = document.querySelector('.comments-loader');
 var commentsCount = document.querySelector('.social__comment-count');
 socialLoader.classList.add('visually-hidden');
@@ -76,6 +76,10 @@ function renderPhoto(photo) {
   photoElement.querySelector('.picture__img').src = photo.url;
   photoElement.querySelector('.picture__likes').textContent = photo.likes;
   photoElement.querySelector('.picture__comments').textContent = photo.comments.length;
+  photoElement.addEventListener('click', function () {
+    bigPicture.classList.remove('hidden');
+    renderBigPicture(photos[0]);
+  });
   return photoElement;
 }
 
@@ -118,5 +122,19 @@ function renderBigPicture(photo) {
   renderComments(photo.comments);
 }
 
-renderBigPicture(photos[0]);
+// renderBigPicture(photos[0]);
 
+// pictureTemplate отвечает за маленькое изображение на странице
+// bigPicture большое изображение на котором весит hidden
+//
+// commentsList.innerHTML = ''; сбрсывает значение
+// bigPictureCancel отвечает за закрытие изображения
+//
+
+//  pictureTemplate.addEventListener('click', function () {
+//    bigPicture.classList.remove('hidden');
+//  });
+
+bigPictureCancel.addEventListener('click', function () {
+  bigPicture.classList.add('hidden');
+});
