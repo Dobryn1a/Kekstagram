@@ -16,10 +16,13 @@ var Likes = {
   MIN: 15,
   MAX: 200
 };
-
 var Avatar = {
   MIN: 1,
   MAX: 6
+};
+var KeyCode = {
+  ENTER: 13,
+  ESC: 27
 };
 
 var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
@@ -77,7 +80,7 @@ function renderPhoto(photo) {
   photoElement.querySelector('.picture__likes').textContent = photo.likes;
   photoElement.querySelector('.picture__comments').textContent = photo.comments.length;
   photoElement.addEventListener('click', function () {
-    bigPicture.classList.remove('hidden');
+    openPhoto();
     renderBigPicture(photos[0]);
   });
   return photoElement;
@@ -138,3 +141,19 @@ function renderBigPicture(photo) {
 bigPictureCancel.addEventListener('click', function () {
   bigPicture.classList.add('hidden');
 });
+
+function closePhoto() {
+  bigPicture.classList.add('hidden');
+}
+
+function openPhoto() {
+  bigPicture.classList.remove('hidden');
+  bigPicture.querySelector('.social__comments').innerHTML = '';
+  document.addEventListener('keydown', onPhotoEscPress);
+}
+
+function onPhotoEscPress(evt) {
+  if (evt.keyCode === KeyCode.ESC) {
+    closePhoto();
+  }
+}
