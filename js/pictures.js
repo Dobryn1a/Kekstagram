@@ -12,7 +12,7 @@ var COMMENTS = ['Всё отлично!', 'В целом всё неплохо. 
 var PHOTOS_COUNT = 25;
 var DISPLAY_COMMENTS = 5;
 
-var Likes = {
+var Like = {
   MIN: 15,
   MAX: 200
 };
@@ -36,6 +36,18 @@ commentsCount.classList.add('visually-hidden');
 var commentTemplate = document.querySelector('#comment').content.querySelector('.social__comment');
 
 var photos = [];
+
+var uploadElement = document.querySelector('.img-upload');
+var uploadFileElement = uploadElement.querySelector('#upload-file');
+var uploadPopupElement = uploadElement.querySelector('.img-upload__overlay');
+var uploadPopupCloseElement = uploadElement.querySelector('#upload-cancel');
+var imgPreviewWrapperElement = uploadElement.querySelector('.img-upload__preview');
+// var imgPreviewElement = imgPreviewWrapperElement.querySelector('.img-upload__preview img');
+var uploadFileScale = uploadElement.querySelector('.img-upload__scale');
+var uploadFileScaleValue = uploadFileScale.querySelector('.scale__control--value');
+var uploadFileScaleValueDecrease = uploadFileScale.querySelector('.scale__control--smaller');
+var uploadFileScaleValueIncrease = uploadFileScale.querySelector('.scale__control--bigger');
+// Все необходимое для формы обработки изображения
 
 function getRandomNumber(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -65,7 +77,7 @@ function generatePhotos() {
   for (var i = 0; i < PHOTOS_COUNT; i++) {
     photos[i] = {
       url: 'photos/' + (i + 1) + '.jpg',
-      likes: getRandomNumber(Likes.MIN, Likes.MAX),
+      likes: getRandomNumber(Like.MIN, Like.MAX),
       comments: getComments(),
       description: getRandomElement(DESCRIPTIONS)
     };
@@ -81,7 +93,7 @@ function renderPhoto(photo) {
   photoElement.querySelector('.picture__comments').textContent = photo.comments.length;
   photoElement.addEventListener('click', function () {
     openPhoto();
-    renderBigPicture(photos[0]);
+    renderBigPicture(photo);
   });
   return photoElement;
 }
@@ -118,7 +130,7 @@ function renderComments(comments) {
 }
 
 function renderBigPicture(photo) {
-  bigPicture.querySelector('.big-picture__img').src = photo.url;
+  bigPicture.querySelector('.big-picture__img img').src = photo.url;
   bigPicture.querySelector('.likes-count').textContent = photo.likes;
   bigPicture.querySelector('.comments-count').textContent = photo.comments.length;
   bigPicture.querySelector('.social__caption').textContent = photo.description;
@@ -139,7 +151,7 @@ function renderBigPicture(photo) {
 //  });
 
 bigPictureCancel.addEventListener('click', function () {
-  bigPicture.classList.add('hidden');
+  closePhoto();
 });
 
 function closePhoto() {
@@ -157,3 +169,45 @@ function onPhotoEscPress(evt) {
     closePhoto();
   }
 }
+
+function closeForm() {
+  uploadPopupElement.classList.add('hidden');
+  document.removeEventListener('keydown', onFormEscPress);
+}
+
+function openForm() {
+  uploadPopupElement.classList.remove('hidden');
+  document.addEventListener('keydown', onFormEscPress);
+}
+
+uploadFileElement.addEventListener('change', function () {
+  openForm();
+});
+
+function onFormEscPress(evt) {
+  if (evt.keyCode === KeyCode.ESC) {
+    closeForm();
+  }
+}
+
+uploadPopupCloseElement.addEventListener('click', function () {
+  closeForm();
+});
+
+uploadFileScaleValueDecrease.addEventListener('click', function () {
+  if (parseInt(uploadFileScaleValue.value, 10) <= 25) {
+    return;
+  } else {
+    uploadFileScaleValue.value = parseInt(uploadFileScaleValue.value, 10) - 25 + '%';
+    imgPreviewWrapperElement.style.transform = 'scale(' + parseInt(uploadFileScaleValue.value, 10) / 100 + ')';
+  }
+});
+
+uploadFileScaleValueIncrease.addEventListener('click', function () {
+  if (parseInt(uploadFileScaleValue.value, 10) === 100) {
+    return;
+  } else {
+    uploadFileScaleValue.value = parseInt(uploadFileScaleValue.value, 10) + 25 + '%';
+    imgPreviewWrapperElement.style.transform = 'scale(' + parseInt(uploadFileScaleValue.value, 10) / 100 + ')';
+  }
+});
