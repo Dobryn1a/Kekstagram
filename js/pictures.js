@@ -42,11 +42,11 @@ var uploadFileElement = uploadElement.querySelector('#upload-file');
 var uploadPopupElement = uploadElement.querySelector('.img-upload__overlay');
 var uploadPopupCloseElement = uploadElement.querySelector('#upload-cancel');
 var imgPreviewWrapperElement = uploadElement.querySelector('.img-upload__preview');
-// var imgPreviewElement = imgPreviewWrapperElement.querySelector('.img-upload__preview img');
-var uploadFileScale = uploadElement.querySelector('.img-upload__scale');
-var uploadFileScaleValue = uploadFileScale.querySelector('.scale__control--value');
-var uploadFileScaleValueDecrease = uploadFileScale.querySelector('.scale__control--smaller');
-var uploadFileScaleValueIncrease = uploadFileScale.querySelector('.scale__control--bigger');
+var imgPreviewElement = imgPreviewWrapperElement.querySelector('.img-upload__preview img');
+var scaleElement = uploadElement.querySelector('.img-upload__scale');
+var scaleValueElement = scaleElement.querySelector('.scale__control--value');
+var scaleSmallerElement = scaleElement.querySelector('.scale__control--smaller');
+var scaleBiggerElement = scaleElement.querySelector('.scale__control--bigger');
 // Все необходимое для формы обработки изображения
 
 function getRandomNumber(min, max) {
@@ -137,22 +137,9 @@ function renderBigPicture(photo) {
   renderComments(photo.comments);
 }
 
-// renderBigPicture(photos[0]);
-
-// pictureTemplate отвечает за маленькое изображение на странице
-// bigPicture большое изображение на котором весит hidden
-//
-// commentsList.innerHTML = ''; сбрсывает значение
-// bigPictureCancel отвечает за закрытие изображения
-//
-
-//  pictureTemplate.addEventListener('click', function () {
-//    bigPicture.classList.remove('hidden');
-//  });
-
 bigPictureCancel.addEventListener('click', function () {
   closePhoto();
-});
+})
 
 function closePhoto() {
   bigPicture.classList.add('hidden');
@@ -182,7 +169,7 @@ function openForm() {
 
 uploadFileElement.addEventListener('change', function () {
   openForm();
-});
+})
 
 function onFormEscPress(evt) {
   if (evt.keyCode === KeyCode.ESC) {
@@ -192,22 +179,29 @@ function onFormEscPress(evt) {
 
 uploadPopupCloseElement.addEventListener('click', function () {
   closeForm();
-});
+})
 
-uploadFileScaleValueDecrease.addEventListener('click', function () {
-  if (parseInt(uploadFileScaleValue.value, 10) <= 25) {
+scaleSmallerElement.addEventListener('click', function () {
+  if (parseInt(scaleValueElement.value, 10) <= 25) {
     return;
-  } else {
-    uploadFileScaleValue.value = parseInt(uploadFileScaleValue.value, 10) - 25 + '%';
-    imgPreviewWrapperElement.style.transform = 'scale(' + parseInt(uploadFileScaleValue.value, 10) / 100 + ')';
   }
-});
 
-uploadFileScaleValueIncrease.addEventListener('click', function () {
-  if (parseInt(uploadFileScaleValue.value, 10) === 100) {
+  imgPreviewWrapperElement.style.transform = 'scale(' + setPhotoScale(-1) / 100 + ')';
+  scaleValueElement.value = setPhotoScale(-1) + '%';
+})
+
+scaleBiggerElement.addEventListener('click', function () {
+  scaleBiggerElement.addEventListener('click', function () {
+    if (parseInt(scaleValueElement.value, 10) === 100) {
     return;
-  } else {
-    uploadFileScaleValue.value = parseInt(uploadFileScaleValue.value, 10) + 25 + '%';
-    imgPreviewWrapperElement.style.transform = 'scale(' + parseInt(uploadFileScaleValue.value, 10) / 100 + ')';
   }
-});
+
+  imgPreviewWrapperElement.style.transform = 'scale(' + setPhotoScale(1) / 100 + ')';
+  scaleValueElement.value = setPhotoScale(1) + '%';
+})
+
+function setPhotoScale(value) {
+  var currentScale = parseInt(scaleValueElement.value, 10);
+  currentScale += ScaleValue.STEP * value;
+  return currentScale;
+}
