@@ -11,7 +11,22 @@ var COMMENTS = ['Всё отлично!', 'В целом всё неплохо. 
 
 var PHOTOS_COUNT = 25;
 var DISPLAY_COMMENTS = 5;
+var DEFAULT_EFFECT = 'none';
 
+var EffectValue = {
+  MAX: 100,
+  DEFAULT: 100,
+};
+var PinValue = {
+  MIN: 0,
+  MAX: 100
+};
+var ScaleValue = {
+  MIN: 25,
+  STEP: 25,
+  MAX: 100,
+  DEFAULT: 100
+};
 var Like = {
   MIN: 15,
   MAX: 200
@@ -24,11 +39,43 @@ var KeyCode = {
   ENTER: 13,
   ESC: 27
 };
-var ScaleValue = {
-  MIN: 25,
-  STEP: 25,
-  MAX: 100,
-  DEFAULT: 100
+
+var EffectParameter = {
+  chrome: {
+    CLASS: 'effects__preview--chrome',
+    PROPERTY: 'grayscale',
+    MIN_VALUE: 0,
+    MAX_VALUE: 1,
+    UNIT: ''
+  },
+  sepia: {
+    CLASS: 'effects__preview--sepia',
+    PROPERTY: 'sepia',
+    MIN_VALUE: 0,
+    MAX_VALUE: 1,
+    UNIT: ''
+  },
+  marvin: {
+    CLASS: 'effects__preview--marvin',
+    PROPERTY: 'invert',
+    MIN_VALUE: 0,
+    MAX_VALUE: 100,
+    UNIT: '%'
+  },
+  phobos: {
+    CLASS: 'effects__preview--phobos',
+    PROPERTY: 'blur',
+    MIN_VALUE: 0,
+    MAX_VALUE: 3,
+    UNIT: 'px'
+  },
+  heat: {
+    CLASS: 'effects__preview--heat',
+    PROPERTY: 'brightness',
+    MIN_VALUE: 1,
+    MAX_VALUE: 3,
+    UNIT: ''
+  }
 };
 
 var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
@@ -55,7 +102,16 @@ var scaleSmallerElement = scaleElement.querySelector('.scale__control--smaller')
 var scaleBiggerElement = scaleElement.querySelector('.scale__control--bigger');
 // Все необходимое для формы обработки изображения
 
-var effectRadio = scaleElement.querySelector('.effects__radio');
+
+var effectLevelElement = uploadElement.querySelector('.effect-level');
+var effectsListElement = uploadElement.querySelector('.effects__list');
+var effectPinElement = effectLevelElement.querySelector('.effect-level__pin');
+var effectDepthElement = effectLevelElement.querySelector('.effect-level__depth');
+var effectLevelValueElement = effectLevelElement.querySelector('.effect-level__value');
+
+var currentEffectName = effectsListElement.querySelector('.effects__radio:checked').value;
+// var currentEffectClass = 'effects__preview--' + currentEffectName;
+// var effectRadio = scaleElement.querySelector('.effects__radio');
 
 function getRandomNumber(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -207,21 +263,38 @@ scaleBiggerElement.addEventListener('click', function () {
   setPhotoScale(1);
 });
 
-var effectLevelElement = uploadElement.querySelector('.effect-level');
+function onImageEffectClick(evt) {
+  var target = evt.target;
+  if (target.tagName !== 'INPUT') {
+    return;
+  }
+  imgPreviewElement.classList = '';
+  currentEffectName = target.value;
+  imgPreviewElement.classList.add('effects__preview--' + effectsListElement.value);
+  imgPreviewElement.style.filter = '';
 
-function addEventsClickHandler(events) {
-  events.addEventListener('click', function () {
-    imgPreviewWrapperElement.classList.remove(imgPreviewWrapperElement.classList[1]);
-    imgPreviewWrapperElement.classList.add('effects__preview--' + events.value);
-    imgPreviewWrapperElement.style.filter = '';
-    if (imgPreviewWrapperElement.classList.contains('effects__preview--none')) {
-      effectLevelElement.classList.add('visually-hidden');
-    } else {
-      effectLevelElement.classList.remove('visually-hidden');
-    }
-  });
+  if (currentEffectName === DEFAULT_EFFECT) {
+    effectLevelElement.classList.add('hidden');
+  } else {
+    effectLevelElement.classList.remove('hidden');
+  }
+  setPinPosition(PinValue.MAX);
 }
 
-effectRadio.addEventListener('click', function () {
-  addEventsClickHandler(events);
-});
+function setPinPosition(value) {
+  effectPinElement.style.left = value + '%';
+  effectLevelValueElement.value = Math.round(value);
+  effectDepthElement.style.width = effectPinElement.style.left;
+  applyEffect(value);
+}
+
+effectsListElement.addEventListener('click', onImageEffectClick);
+
+function applyEffect(value) {
+  imgPreviewElement.style.filter = '';
+  imgPreviewElement.style.filter = EffectParameter[currentEffectName].PROPERTY + '(' + getFilterValue(currentEffectName, value) + ')';
+}
+
+function getFilterValue(effect, value) {
+  return value * (EffectParameter[effect].MAX_VALUE - EffectParameter[effect].MIN_VALUE) / EffectValue.MAX + EffectParameter[effect].MIN_VALUE + EffectParameter[effect].UNIT;
+}
