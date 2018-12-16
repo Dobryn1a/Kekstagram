@@ -111,6 +111,7 @@ var effectLevelValueElement = effectLevelElement.querySelector('.effect-level__v
 
 var currentEffectName = effectsListElement.querySelector('.effects__radio:checked').value;
 // var currentEffectClass = 'effects__preview--' + currentEffectName;
+var defaultClass = effectsListElement.querySelector('.effects__preview--none');
 // var effectRadio = scaleElement.querySelector('.effects__radio');
 
 function getRandomNumber(min, max) {
@@ -291,8 +292,11 @@ function setPinPosition(value) {
 effectsListElement.addEventListener('click', onImageEffectClick);
 
 function applyEffect(value) {
-  imgPreviewElement.style.filter = '';
-  imgPreviewElement.style.filter = EffectParameter[currentEffectName].PROPERTY + '(' + getFilterValue(currentEffectName, value) + ')';
+  if (defaultClass) {
+    imgPreviewElement.style.filter = '';
+  } else {
+    imgPreviewElement.style.filter = EffectParameter[currentEffectName].PROPERTY + '(' + getFilterValue(currentEffectName, value) + ')';
+  }
 }
 
 function getFilterValue(effect, value) {
