@@ -13,6 +13,13 @@ var PHOTOS_COUNT = 25;
 var DISPLAY_COMMENTS = 5;
 var DEFAULT_EFFECT = 'none';
 
+var Hashtag = {
+  QUANITY: 5,
+  HASH_SYMBOL: '#',
+  MAX_LENGTH: 20,
+  MIN_LENGTH: 2
+};
+
 var EffectValue = {
   MAX: 100,
   DEFAULT: 100,
@@ -113,6 +120,11 @@ var currentEffectName = effectsListElement.querySelector('.effects__radio:checke
 // var currentEffectClass = 'effects__preview--' + currentEffectName;
 var defaultClass = effectsListElement.querySelector('.effects__preview--none');
 // var effectRadio = scaleElement.querySelector('.effects__radio');
+
+var hashtagElement = document.querySelector('.text__hashtags');
+var descriptionElement = document.querySelector('.text__description');
+var uploadTextAreaElement = uploadElement.querySelector('.img-upload__text');
+var uploadSubmitElement = uploadElement.querySelector('.img-upload__submit');
 
 function getRandomNumber(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -282,14 +294,12 @@ function onImageEffectClick(evt) {
   setPinPosition(PinValue.MAX);
 }
 
-function setPinPosition(value) {
-  effectPinElement.style.left = value + '%';
-  effectLevelValueElement.value = Math.round(value);
-  effectDepthElement.style.width = effectPinElement.style.left;
-  applyEffect(value);
-}
-
 effectsListElement.addEventListener('click', onImageEffectClick);
+
+
+function getFilterValue(effect, value) {
+  return value * (EffectParameter[effect].MAX_VALUE - EffectParameter[effect].MIN_VALUE) / EffectValue.MAX + EffectParameter[effect].MIN_VALUE + EffectParameter[effect].UNIT;
+}
 
 function applyEffect(value) {
   if (defaultClass) {
@@ -299,6 +309,79 @@ function applyEffect(value) {
   }
 }
 
-function getFilterValue(effect, value) {
-  return value * (EffectParameter[effect].MAX_VALUE - EffectParameter[effect].MIN_VALUE) / EffectValue.MAX + EffectParameter[effect].MIN_VALUE + EffectParameter[effect].UNIT;
+function setPinPosition(value) {
+  effectPinElement.style.left = value + '%';
+  effectLevelValueElement.value = Math.round(value);
+  effectDepthElement.style.width = effectPinElement.style.left;
+  applyEffect(value);
 }
+
+function checkRepeatHashtags(hashtags) {
+  for (var i = 0; i < hashtags.length; i++) {
+    var currentHashtag = hashtags[i];
+    for (var j = 0; j < hashtags.length; j++) {
+      if (currentHashtag === hashtags[j] && i !== j) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+function validateHashtags(hashtags) {
+  for (var i = 0; i < hashtags.length; i++) {
+    hashtags[i] = hashtags[i].toLowerCase();
+    if (hashtags[i][0] !== Hashtag.HASH_SYMBOL && hashtags[i][0] !== ' ') {
+      hashtagElement.setCustomValidity('Хэштег должен начинаться с символа # и не содержать пробелов');
+    } else if (hashtags[i].length > Hashtag.MAX_LENGTH) {
+      hashtagElement.setCustomValidity('Длина хештега не может превышать 20 символов');
+    } else if (hashtags[i].length === 1) {
+      hashtagElement.setCustomValidity('Одна решетка для хештега? Нет нет нет дружочек:)');
+    } else if (hashtags.length > Hashtag.QUANITY) {
+      hashtagElement.setCustomValidity('Допустимое количество  хэштегов  не более 5');
+    } else if (checkRepeatHashtags(hashtags)) {
+      hashtagElement.setCustomValidity('Хэштеги не должны повторяться');
+    } else if (hashtags[i].indexOf('#', 1) !== -1) {
+      hashtagElement.setCustomValidity('Хэштеги разделяются пробелами');
+    } else {
+      hashtagElement.setCustomValidity('');
+    }
+  }
+}
+
+function highlightInvalidField(field) {
+  if (!field.validity.valid) {
+    field.style.border = '2px solid red';
+  } else {
+    field.style.border = 'none';
+  }
+}
+
+
+hashtagElement.addEventListener('input', function () {
+  var hashtags = hashtagElement.value.toLowerCase().split(' ');
+  validateHashtags(hashtags);
+  highlightInvalidField(hashtagElement);
+});
+
+uploadSubmitElement.addEventListener('submit', function () {
+  highlightInvalidField(hashtagElement);
+  highlightInvalidField(uploadTextAreaElement);
+});
+
+
+hashtagElement.addEventListener('focusin', function () {
+  document.removeEventListener('keydown', onFormEscPress);
+});
+
+hashtagElement.addEventListener('focusout', function () {
+  document.addEventListener('keydown', onFormEscPress);
+});
+
+descriptionElement.addEventListener('focusin', function () {
+  document.removeEventListener('keydown', onFormEscPress);
+});
+
+descriptionElement.addEventListener('focusout', function () {
+  document.addEventListener('keydown', onFormEscPress);
+});
