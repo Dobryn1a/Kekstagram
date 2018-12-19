@@ -16,8 +16,7 @@ var DEFAULT_EFFECT = 'none';
 var Hashtag = {
   QUANITY: 5,
   HASH_SYMBOL: '#',
-  MAX_LENGTH: 20,
-  MIN_LENGTH: 2
+  MAX_LENGTH: 20
 };
 
 var EffectValue = {
@@ -123,7 +122,6 @@ var defaultClass = effectsListElement.querySelector('.effects__preview--none');
 
 var hashtagElement = document.querySelector('.text__hashtags');
 var descriptionElement = document.querySelector('.text__description');
-var uploadTextAreaElement = uploadElement.querySelector('.img-upload__text');
 var uploadSubmitElement = uploadElement.querySelector('.img-upload__submit');
 
 function getRandomNumber(min, max) {
@@ -283,7 +281,7 @@ function onImageEffectClick(evt) {
   }
   imgPreviewElement.classList = '';
   currentEffectName = target.value;
-  imgPreviewElement.classList.add('effects__preview--' + effectsListElement.value);
+  imgPreviewElement.classList.add('effects__preview--' + currentEffectName);
   imgPreviewElement.style.filter = '';
 
   if (currentEffectName === DEFAULT_EFFECT) {
@@ -328,45 +326,53 @@ function checkRepeatHashtags(hashtags) {
   return false;
 }
 
-function validateHashtags(hashtags) {
-  for (var i = 0; i < hashtags.length; i++) {
-    hashtags[i] = hashtags[i].toLowerCase();
-    if (hashtags[i][0] !== Hashtag.HASH_SYMBOL && hashtags[i][0] !== ' ') {
-      hashtagElement.setCustomValidity('Хэштег должен начинаться с символа # и не содержать пробелов');
-    } else if (hashtags[i].length > Hashtag.MAX_LENGTH) {
-      hashtagElement.setCustomValidity('Длина хештега не может превышать 20 символов');
-    } else if (hashtags[i].length === 1) {
-      hashtagElement.setCustomValidity('Одна решетка для хештега? Нет нет нет дружочек:)');
-    } else if (hashtags.length > Hashtag.QUANITY) {
-      hashtagElement.setCustomValidity('Допустимое количество  хэштегов  не более 5');
-    } else if (checkRepeatHashtags(hashtags)) {
-      hashtagElement.setCustomValidity('Хэштеги не должны повторяться');
-    } else if (hashtags[i].indexOf('#', 1) !== -1) {
-      hashtagElement.setCustomValidity('Хэштеги разделяются пробелами');
-    } else {
-      hashtagElement.setCustomValidity('');
-    }
+function hashtagValidity() {
+  hashtagElement.style.outline = '';
+  var errorMessage = '';
+  var hashtagValue = hashtagElement.value.trim();
+
+  if (hashtagValue === '') {
+    hashtagElement.setCustomValidity(errorMessage);
+    return;
   }
+  var hashtags = hashtagValue.toLowerCase().split(' ');
+  hashtags.forEach(function (hashtagItem) {
+    if (hashtagItem.charAt(0) !== Hashtag.HASH_SYMBOL) {
+      errorMessage = 'Хэштег должен начинаться с символа #';
+    } else if (hashtagItem.indexOf(Hashtag.HASH_SYMBOL, 1) > 1) {
+      errorMessage = 'Хэш-теги разделяются пробелами';
+    } else if (hashtagItem.charAt(0) === Hashtag.HASH_SYMBOL && hashtagItem.length === 1) {
+      errorMessage = 'Хеш-тег не может состоять только из одной решётки';
+    } else if (hashtags.length > Hashtag.QUANITY) {
+      errorMessage = 'Допустимое количество  хэштегов  не более 5';
+    } else if (hashtagItem.length > Hashtag.MAX_LENGTH) {
+      errorMessage = 'Максимальная длина одного хэш-тега 20 символов, включая решётку';
+    } else if (checkRepeatHashtags(hashtags)) {
+      errorMessage = 'Хэштеги не должны повторяться';
+    }
+  });
+
+  hashtagElement.setCustomValidity(errorMessage);
+
 }
+
+hashtagElement.addEventListener('input', hashtagValidity);
 
 function highlightInvalidField(field) {
   if (!field.validity.valid) {
-    field.style.border = '2px solid red';
+    field.style.outline = '2px solid red';
   } else {
-    field.style.border = 'none';
+    field.style.outline = 'none';
   }
 }
 
 
-hashtagElement.addEventListener('input', function () {
-  var hashtags = hashtagElement.value.toLowerCase().split(' ');
-  validateHashtags(hashtags);
+uploadSubmitElement.addEventListener('click', function () {
   highlightInvalidField(hashtagElement);
 });
 
 uploadSubmitElement.addEventListener('submit', function () {
   highlightInvalidField(hashtagElement);
-  highlightInvalidField(uploadTextAreaElement);
 });
 
 
