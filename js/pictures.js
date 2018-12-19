@@ -13,6 +13,12 @@ var PHOTOS_COUNT = 25;
 var DISPLAY_COMMENTS = 5;
 var DEFAULT_EFFECT = 'none';
 
+var Hashtag = {
+  QUANITY: 5,
+  HASH_SYMBOL: '#',
+  MAX_LENGTH: 20
+};
+
 var EffectValue = {
   MAX: 100,
   DEFAULT: 100,
@@ -113,6 +119,10 @@ var currentEffectName = effectsListElement.querySelector('.effects__radio:checke
 // var currentEffectClass = 'effects__preview--' + currentEffectName;
 var defaultClass = effectsListElement.querySelector('.effects__preview--none');
 // var effectRadio = scaleElement.querySelector('.effects__radio');
+
+var hashtagElement = document.querySelector('.text__hashtags');
+var descriptionElement = document.querySelector('.text__description');
+var uploadSubmitElement = uploadElement.querySelector('.img-upload__submit');
 
 function getRandomNumber(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -271,7 +281,7 @@ function onImageEffectClick(evt) {
   }
   imgPreviewElement.classList = '';
   currentEffectName = target.value;
-  imgPreviewElement.classList.add('effects__preview--' + effectsListElement.value);
+  imgPreviewElement.classList.add('effects__preview--' + currentEffectName);
   imgPreviewElement.style.filter = '';
 
   if (currentEffectName === DEFAULT_EFFECT) {
@@ -282,14 +292,12 @@ function onImageEffectClick(evt) {
   setPinPosition(PinValue.MAX);
 }
 
-function setPinPosition(value) {
-  effectPinElement.style.left = value + '%';
-  effectLevelValueElement.value = Math.round(value);
-  effectDepthElement.style.width = effectPinElement.style.left;
-  applyEffect(value);
-}
-
 effectsListElement.addEventListener('click', onImageEffectClick);
+
+
+function getFilterValue(effect, value) {
+  return value * (EffectParameter[effect].MAX_VALUE - EffectParameter[effect].MIN_VALUE) / EffectValue.MAX + EffectParameter[effect].MIN_VALUE + EffectParameter[effect].UNIT;
+}
 
 function applyEffect(value) {
   if (defaultClass) {
@@ -299,6 +307,87 @@ function applyEffect(value) {
   }
 }
 
-function getFilterValue(effect, value) {
-  return value * (EffectParameter[effect].MAX_VALUE - EffectParameter[effect].MIN_VALUE) / EffectValue.MAX + EffectParameter[effect].MIN_VALUE + EffectParameter[effect].UNIT;
+function setPinPosition(value) {
+  effectPinElement.style.left = value + '%';
+  effectLevelValueElement.value = Math.round(value);
+  effectDepthElement.style.width = effectPinElement.style.left;
+  applyEffect(value);
 }
+
+function checkRepeatHashtags(hashtags) {
+  for (var i = 0; i < hashtags.length; i++) {
+    var currentHashtag = hashtags[i];
+    for (var j = 0; j < hashtags.length; j++) {
+      if (currentHashtag === hashtags[j] && i !== j) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+function hashtagValidity() {
+  hashtagElement.style.outline = '';
+  var errorMessage = '';
+  var hashtagValue = hashtagElement.value.trim();
+
+  if (hashtagValue === '') {
+    hashtagElement.setCustomValidity(errorMessage);
+    return;
+  }
+  var hashtags = hashtagValue.toLowerCase().split(' ');
+  hashtags.forEach(function (hashtagItem) {
+    if (hashtagItem.charAt(0) !== Hashtag.HASH_SYMBOL) {
+      errorMessage = 'Хэштег должен начинаться с символа #';
+    } else if (hashtagItem.indexOf(Hashtag.HASH_SYMBOL, 1) > 1) {
+      errorMessage = 'Хэш-теги разделяются пробелами';
+    } else if (hashtagItem.charAt(0) === Hashtag.HASH_SYMBOL && hashtagItem.length === 1) {
+      errorMessage = 'Хеш-тег не может состоять только из одной решётки';
+    } else if (hashtags.length > Hashtag.QUANITY) {
+      errorMessage = 'Допустимое количество  хэштегов  не более 5';
+    } else if (hashtagItem.length > Hashtag.MAX_LENGTH) {
+      errorMessage = 'Максимальная длина одного хэш-тега 20 символов, включая решётку';
+    } else if (checkRepeatHashtags(hashtags)) {
+      errorMessage = 'Хэштеги не должны повторяться';
+    }
+  });
+
+  hashtagElement.setCustomValidity(errorMessage);
+
+}
+
+hashtagElement.addEventListener('input', hashtagValidity);
+
+function highlightInvalidField(field) {
+  if (!field.validity.valid) {
+    field.style.outline = '2px solid red';
+  } else {
+    field.style.outline = 'none';
+  }
+}
+
+
+uploadSubmitElement.addEventListener('click', function () {
+  highlightInvalidField(hashtagElement);
+});
+
+uploadSubmitElement.addEventListener('submit', function () {
+  highlightInvalidField(hashtagElement);
+});
+
+
+hashtagElement.addEventListener('focusin', function () {
+  document.removeEventListener('keydown', onFormEscPress);
+});
+
+hashtagElement.addEventListener('focusout', function () {
+  document.addEventListener('keydown', onFormEscPress);
+});
+
+descriptionElement.addEventListener('focusin', function () {
+  document.removeEventListener('keydown', onFormEscPress);
+});
+
+descriptionElement.addEventListener('focusout', function () {
+  document.addEventListener('keydown', onFormEscPress);
+});
