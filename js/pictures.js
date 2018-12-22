@@ -115,9 +115,9 @@ var effectPinElement = effectLevelElement.querySelector('.effect-level__pin');
 var effectDepthElement = effectLevelElement.querySelector('.effect-level__depth');
 var effectLevelValueElement = effectLevelElement.querySelector('.effect-level__value');
 
-var currentEffectName = effectsListElement.querySelector('.effects__radio:checked').value;
-var currentEffectClass = 'effects__preview--' + currentEffectName;
-// var defaultClass = effectsListElement.querySelector('.effects__preview--none');
+var currentEffectName = effectsListElement.querySelector('.effects__radio:checked');
+// var currentEffectClass = 'effects__preview--' + currentEffectName;
+// var defaultClass = effectsListElement.querySelector('.effects__preview--none')         .value;
 
 var hashtagElement = document.querySelector('.text__hashtags');
 var descriptionElement = document.querySelector('.text__description');
@@ -282,19 +282,19 @@ function setPinPosition(value) {
   effectDepthElement.style.width = effectPinElement.style.left;
 }
 
-function setDefaultPinPosition() {
-  effectLevelValueElement.value = PinValue.MAX;
-  effectPinElement.style.left = EffectValue.DEFAULT + '%';
-  effectDepthElement.style.width = effectPinElement.style.left;
-}
+// function setDefaultPinPosition() {
+//   effectLevelValueElement.value = PinValue.MAX;
+//   effectPinElement.style.left = EffectValue.DEFAULT + '%';
+//   effectDepthElement.style.width = effectPinElement.style.left;
+// }
 
 function setDefaultEffect() {
   defaultElement.checked = true;
   imgPreviewElement.classList = '';
   imgPreviewElement.style.filter = '';
-  imgPreviewElement.classList.add(DEFAULT_EFFECT);
+  imgPreviewElement.classList.add('effects__preview--' + DEFAULT_EFFECT);
   effectLevelElement.classList.add('hidden');
-  setDefaultPinPosition();
+  setPinPosition(PinValue.DEFAULT);
 }
 
 function onImageEffectClick(evt) {
@@ -317,35 +317,36 @@ function onImageEffectClick(evt) {
   setPinPosition();
 }
 
-// function getFilterValue(effect, value) {
-//   return value * (EffectParameter[effect].MAX_VALUE - EffectParameter[effect].MIN_VALUE) / EffectValue.MAX + EffectParameter[effect].MIN_VALUE + EffectParameter[effect].UNIT;
-// }
+function getFilterValue(effect, value) {
+  return value * (EffectParameter[effect].MAX_VALUE - EffectParameter[effect].MIN_VALUE) / EffectValue.MAX + EffectParameter[effect].MIN_VALUE + EffectParameter[effect].UNIT;
+}
 
 function applyEffect(value) {
-  // if (defaultClass) {
-  //   imgPreviewElement.style.filter = '';
-  // } else {
-  //   imgPreviewElement.style.filter = EffectParameter[currentEffectName].PROPERTY + '(' + getFilterValue(currentEffectName, value) + ')';
-  // }
-  switch (currentEffectClass) {
-    case EffectParameter.chrome.CLASS:
-      imgPreviewElement.style.filter = EffectParameter.chrome.PROPERTY + '(' + (value) / EffectValue.DEFAULT + EffectParameter.chrome.UNIT + ')';
-      break;
-    case EffectParameter.sepia.CLASS:
-      imgPreviewElement.style.filter = EffectParameter.sepia.PROPERTY + '(' + (value) / EffectValue.DEFAULT + EffectParameter.sepia.UNIT + ')';
-      break;
-    case EffectParameter.marvin.CLASS:
-      imgPreviewElement.style.filter = EffectParameter.marvin.PROPERTY + '(' + (value) * EffectParameter.marvin.MAX_VALUE / EffectValue.MAX + EffectParameter.marvin.UNIT + ')';
-      break;
-    case EffectParameter.phobos.CLASS:
-      imgPreviewElement.style.filter = EffectParameter.phobos.PROPERTY + '(' + (value) * EffectParameter.phobos.MAX_VALUE / EffectValue.DEFAULT + EffectParameter.phobos.UNIT + ')';
-      break;
-    case EffectParameter.heat.CLASS:
-      imgPreviewElement.style.filter = EffectParameter.heat.PROPERTY + '(' + ((value) / (EffectValue.MAX / (EffectParameter.heat.MAX_VALUE - EffectParameter.heat.MIN_VALUE)) + EffectParameter.heat.MIN_VALUE) + EffectParameter.heat.UNIT + ')';
-      break;
-    default:
-      imgPreviewElement.style.filter = '';
+  if (currentEffectName === DEFAULT_EFFECT) {
+    imgPreviewElement.style.filter = '';
+  } else {
+    imgPreviewElement.style.filter = EffectParameter[currentEffectName].PROPERTY + '(' + getFilterValue(currentEffectName, value) + ')';
   }
+  setPinPosition(value);
+  // switch (currentEffectClass) {
+  //   case EffectParameter.chrome.CLASS:
+  //     imgPreviewElement.style.filter = EffectParameter.chrome.PROPERTY + '(' + (value) / EffectValue.DEFAULT + EffectParameter.chrome.UNIT + ')';
+  //     break;
+  //   case EffectParameter.sepia.CLASS:
+  //     imgPreviewElement.style.filter = EffectParameter.sepia.PROPERTY + '(' + (value) / EffectValue.DEFAULT + EffectParameter.sepia.UNIT + ')';
+  //     break;
+  //   case EffectParameter.marvin.CLASS:
+  //     imgPreviewElement.style.filter = EffectParameter.marvin.PROPERTY + '(' + (value) * EffectParameter.marvin.MAX_VALUE / EffectValue.MAX + EffectParameter.marvin.UNIT + ')';
+  //     break;
+  //   case EffectParameter.phobos.CLASS:
+  //     imgPreviewElement.style.filter = EffectParameter.phobos.PROPERTY + '(' + (value) * EffectParameter.phobos.MAX_VALUE / EffectValue.DEFAULT + EffectParameter.phobos.UNIT + ')';
+  //     break;
+  //   case EffectParameter.heat.CLASS:
+  //     imgPreviewElement.style.filter = EffectParameter.heat.PROPERTY + '(' + ((value) / (EffectValue.MAX / (EffectParameter.heat.MAX_VALUE - EffectParameter.heat.MIN_VALUE)) + EffectParameter.heat.MIN_VALUE) + EffectParameter.heat.UNIT + ')';
+  //     break;
+  //   default:
+  //     imgPreviewElement.style.filter = '';
+  // }
 }
 
 function checkRepeatHashtags(hashtags) {
@@ -447,7 +448,7 @@ function onMouseDown(evt) {
       effectLevelValueElement.value = PinValue.MAX;
     }
 
-    setPinPosition(movePosition);
+    // setPinPosition(movePosition);
     applyEffect(movePosition);
   };
 
