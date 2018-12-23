@@ -13,39 +13,6 @@ var PHOTOS_COUNT = 25;
 var DISPLAY_COMMENTS = 5;
 var DEFAULT_EFFECT = 'none';
 
-var Hashtag = {
-  QUANITY: 5,
-  HASH_SYMBOL: '#',
-  MAX_LENGTH: 20
-};
-
-var EffectValue = {
-  MAX: 100,
-  DEFAULT: 100,
-};
-var PinValue = {
-  MIN: 0,
-  MAX: 100
-};
-var ScaleValue = {
-  MIN: 25,
-  STEP: 25,
-  MAX: 100,
-  DEFAULT: 100
-};
-var Like = {
-  MIN: 15,
-  MAX: 200
-};
-var Avatar = {
-  MIN: 1,
-  MAX: 6
-};
-var KeyCode = {
-  ENTER: 13,
-  ESC: 27
-};
-
 var EffectParameter = {
   chrome: {
     CLASS: 'effects__preview--chrome',
@@ -83,6 +50,42 @@ var EffectParameter = {
     UNIT: ''
   }
 };
+
+var EffectValue = {
+  MAX: 100,
+  DEFAULT: 100,
+};
+var PinValue = {
+  MIN: 0,
+  MAX: 100
+};
+
+var Hashtag = {
+  QUANITY: 5,
+  HASH_SYMBOL: '#',
+  MAX_LENGTH: 20
+};
+
+
+var ScaleValue = {
+  MIN: 25,
+  STEP: 25,
+  MAX: 100,
+  DEFAULT: 100
+};
+var Like = {
+  MIN: 15,
+  MAX: 200
+};
+var Avatar = {
+  MIN: 1,
+  MAX: 6
+};
+var KeyCode = {
+  ENTER: 13,
+  ESC: 27
+};
+
 
 var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 var picturesBlock = document.querySelector('.pictures');
