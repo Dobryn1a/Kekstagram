@@ -2,7 +2,7 @@
 
 (function () {
 
-  // var PHOTOS_COUNT = 25;
+  var PHOTOS_COUNT = 25;
 
   var photos = [];
 
@@ -23,6 +23,7 @@
 
   function appendPhotos() {
     var fragment = document.createDocumentFragment();
+    photos = window.data.generatePhotos(PHOTOS_COUNT);
     for (var i = 0; i < photos.length; i++) {
       fragment.appendChild(renderPhoto(photos[i]));
     }

@@ -34,20 +34,19 @@
     return comments;
   }
 
-  function generatePhotos() {
-    var photos = [];
-    for (var i = 0; i < PHOTOS_COUNT; i++) {
-      photos[i] = {
-        url: 'photos/' + (i + 1) + '.jpg',
-        likes: window.util.getRandomNumber(Like.MIN, Like.MAX),
-        comments: getComments(),
-        description: window.util.getRandomElement(DESCRIPTIONS)
-      };
-    }
-  }
-
   window.data = {
-    generatePhotos: generatePhotos
+    generatePhotos: function () {
+      var photos = [];
+      for (var i = 0; i < PHOTOS_COUNT; i++) {
+        photos[i] = {
+          url: 'photos/' + (i + 1) + '.jpg',
+          likes: window.util.getRandomNumber(Like.MIN, Like.MAX),
+          comments: getComments(),
+          description: window.util.getRandomElement(DESCRIPTIONS)
+        };
+      }
+      return photos;
+    }
   };
 
 })();
