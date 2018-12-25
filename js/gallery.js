@@ -23,7 +23,7 @@
     window.util.isEscEvent(evt, closePhoto);
   }
 
-  window.picture.appendPhotos();
+  // window.picture.appendPhotos();
 
   window.gallery = {
     openPhoto: openPhoto,

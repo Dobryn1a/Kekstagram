@@ -2,9 +2,9 @@
 
 (function () {
 
-  var PHOTOS_COUNT = 25;
+  // var PHOTOS_COUNT = 25;
 
-  var photos = [];
+  // var photos = [];
 
   var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
   var picturesBlock = document.querySelector('.pictures');
@@ -21,17 +21,37 @@
     return photoElement;
   }
 
-  function appendPhotos() {
+  // function appendPhotos() {
+  //   var fragment = document.createDocumentFragment();
+  //   photos = window.data.generatePhotos(PHOTOS_COUNT);
+  //   for (var i = 0; i < photos.length; i++) {
+  //     fragment.appendChild(renderPhoto(photos[i]));
+  //   }
+  //   picturesBlock.appendChild(fragment);
+  // }
+
+  function onLoad(photos) {
     var fragment = document.createDocumentFragment();
-    photos = window.data.generatePhotos(PHOTOS_COUNT);
     for (var i = 0; i < photos.length; i++) {
       fragment.appendChild(renderPhoto(photos[i]));
     }
     picturesBlock.appendChild(fragment);
   }
 
-  window.picture = {
-    appendPhotos: appendPhotos
+  var onError = function (errorMessage) {
+    var node = document.createElement('div');
+    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: #232321;';
+    node.style.position = 'absolute';
+    node.style.left = '50%';
+    node.style.top = '40%';
+    node.style.padding = '40px';
+    node.style.transform = 'translate(-50%, -50%)';
+    node.style.fontSize = '30px';
+    node.style.border = '12px groove #e6d71e';
+    node.textContent = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', node);
   };
+
+  window.load(onLoad, onError);
 
 })();
