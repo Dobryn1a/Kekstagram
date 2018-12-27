@@ -17,8 +17,6 @@
   function openForm() {
     uploadPopupElement.classList.remove('hidden');
     uploadSendButtonElement.disabled = false;
-    window.effects.setDefaultPinPosition();
-    window.effects.setDefaultEffect();
     document.addEventListener('keydown', onFormEscPress);
   }
 
