@@ -3,6 +3,7 @@
 (function () {
 
   var uploadElement = document.querySelector('.img-upload');
+  var uploadFileElement = uploadElement.querySelector('#upload-file');
   var uploadSendButtonElement = uploadElement.querySelector('.img-upload__submit');
   var uploadPopupElement = uploadElement.querySelector('.img-upload__overlay');
   var uploadPopupCloseElement = uploadElement.querySelector('#upload-cancel');
@@ -16,12 +17,14 @@
   function openForm() {
     uploadPopupElement.classList.remove('hidden');
     uploadSendButtonElement.disabled = false;
+    window.effects.setDefaultPinPosition();
+    window.effects.setDefaultEffect();
     document.addEventListener('keydown', onFormEscPress);
   }
 
   function closeForm() {
     uploadPopupElement.classList.add('hidden');
-    uploadSendButtonElement.value = null;
+    uploadFileElement.value = null;
     document.removeEventListener('keydown', onFormEscPress);
   }
 
@@ -29,13 +32,14 @@
     window.util.isEscEvent(evt, closeForm);
   };
 
-  uploadSendButtonElement.addEventListener('change', function () {
+  uploadFormSelectElement.addEventListener('change', function () {
     openForm();
   });
 
   uploadPopupCloseElement.addEventListener('click', function () {
     closeForm();
   });
+
   hashtagElement.addEventListener('focusin', function () {
     document.removeEventListener('keydown', onFormEscPress);
   });
@@ -97,8 +101,14 @@
     showModalSucces(successModalTemplate);
   };
 
-  uploadFormSelectElement.addEventListener('submit', function (evt) {
-    window.upload(new FormData(uploadFormSelectElement), onSuccess, onError);
+  // uploadFormSelectElement.addEventListener('submit', function (evt) {
+  //   window.upload(new FormData(uploadFormSelectElement), onSuccess, onError);
+  //   uploadSendButtonElement.disabled = true;
+  //   evt.preventDefault();
+  // });
+
+  uploadSendButtonElement.addEventListener('submit', function (evt) {
+    window.upload(new FormData(uploadSendButtonElement), onSuccess, onError);
     uploadSendButtonElement.disabled = true;
     evt.preventDefault();
   });
