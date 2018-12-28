@@ -2,113 +2,154 @@
 
 (function () {
 
-  var uploadElement = document.querySelector('.img-upload');
-  var uploadFileElement = uploadElement.querySelector('#upload-file');
-  var uploadSendButtonElement = uploadElement.querySelector('.img-upload__submit');
-  var uploadPopupElement = uploadElement.querySelector('.img-upload__overlay');
-  var uploadPopupCloseElement = uploadElement.querySelector('#upload-cancel');
-  var hashtagElement = document.querySelector('.text__hashtags');
-  var descriptionElement = document.querySelector('.text__description');
-  var uploadFormSelectElement = document.querySelector('#upload-select-image');
-  var errorModalTemplate = document.querySelector('#error').content.querySelector('.error');
-  var successModalTemplate = document.querySelector('#success').content.querySelector('.success');
-  var mainElement = document.querySelector('main');
+  var DEFAULT_EFFECT = 'none';
 
-  function openForm() {
-    uploadPopupElement.classList.remove('hidden');
-    uploadSendButtonElement.disabled = false;
-    document.addEventListener('keydown', onFormEscPress);
-  }
-
-  function closeForm() {
-    uploadPopupElement.classList.add('hidden');
-    uploadFileElement.value = null;
-    document.removeEventListener('keydown', onFormEscPress);
-  }
-
-  var onFormEscPress = function (evt) {
-    window.util.isEscEvent(evt, closeForm);
-  };
-
-  uploadFormSelectElement.addEventListener('change', function () {
-    openForm();
-  });
-
-  uploadPopupCloseElement.addEventListener('click', function () {
-    closeForm();
-  });
-
-  hashtagElement.addEventListener('focusin', function () {
-    document.removeEventListener('keydown', onFormEscPress);
-  });
-
-  hashtagElement.addEventListener('focusout', function () {
-    document.addEventListener('keydown', onFormEscPress);
-  });
-
-  descriptionElement.addEventListener('focusin', function () {
-    document.removeEventListener('keydown', onFormEscPress);
-  });
-
-  descriptionElement.addEventListener('focusout', function () {
-    document.addEventListener('keydown', onFormEscPress);
-  });
-
-  var showModalError = function (element, text) {
-    mainElement.appendChild(element);
-    element.querySelector('.error__title').textContent = text;
-    element.querySelector('.error__button').addEventListener('click', function () {
-      closeModal();
-    });
-    document.addEventListener('keydown', onModalEscPress);
-  };
-
-  var closeModal = function () {
-    var modalElement = mainElement.querySelector('.modal');
-    mainElement.removeChild(modalElement);
-    document.removeEventListener('keydown', onModalEscPress);
-  };
-
-  var showModalSucces = function (element) {
-    document.addEventListener('keydown', onModalEscPress);
-    mainElement.appendChild(element);
-    element.querySelector('.success__button').addEventListener('click', function () {
-      closeModal();
-    });
-    element.addEventListener('click', onDocumentClick);
-  };
-
-  var onDocumentClick = function (evt) {
-    if (evt.target.tagName === 'SECTION') {
-      closeModal();
+  var EffectParameter = {
+    chrome: {
+      CLASS: 'effects__preview--chrome',
+      PROPERTY: 'grayscale',
+      MIN_VALUE: 0,
+      MAX_VALUE: 1,
+      UNIT: ''
+    },
+    sepia: {
+      CLASS: 'effects__preview--sepia',
+      PROPERTY: 'sepia',
+      MIN_VALUE: 0,
+      MAX_VALUE: 1,
+      UNIT: ''
+    },
+    marvin: {
+      CLASS: 'effects__preview--marvin',
+      PROPERTY: 'invert',
+      MIN_VALUE: 0,
+      MAX_VALUE: 100,
+      UNIT: '%'
+    },
+    phobos: {
+      CLASS: 'effects__preview--phobos',
+      PROPERTY: 'blur',
+      MIN_VALUE: 0,
+      MAX_VALUE: 3,
+      UNIT: 'px'
+    },
+    heat: {
+      CLASS: 'effects__preview--heat',
+      PROPERTY: 'brightness',
+      MIN_VALUE: 1,
+      MAX_VALUE: 3,
+      UNIT: ''
     }
   };
 
-  var onModalEscPress = function (evt) {
-    window.util.isEscEvent(evt, closeModal);
+  var EffectValue = {
+    MAX: 100,
+    DEFAULT: 100,
   };
 
-
-  var onError = function (errorMessage) {
-    closeForm();
-    showModalError(errorModalTemplate, errorMessage);
+  var PinValue = {
+    MIN: 0,
+    MAX: 100
   };
 
-  var onSuccess = function () {
-    closeForm();
-    showModalSucces(successModalTemplate);
+  var uploadElement = document.querySelector('.img-upload');
+  var imgPreviewWrapperElement = uploadElement.querySelector('.img-upload__preview');
+  var imgPreviewElement = imgPreviewWrapperElement.querySelector('.img-upload__preview img');
+  var effectLevelElement = uploadElement.querySelector('.effect-level');
+  var effectsListElement = uploadElement.querySelector('.effects__list');
+  var effectPinElement = effectLevelElement.querySelector('.effect-level__pin');
+  var effectDepthElement = effectLevelElement.querySelector('.effect-level__depth');
+  var effectLevelValueElement = effectLevelElement.querySelector('.effect-level__value');
+  var currentEffectName = effectsListElement.querySelector('.effects__radio:checked');
+  var defaultElement = effectsListElement.querySelector('#effect-' + DEFAULT_EFFECT);
+  var effectLevelLineElement = effectLevelElement.querySelector('.effect-level__line');
+
+  function applyEffect(value) {
+    if (currentEffectName === DEFAULT_EFFECT) {
+      imgPreviewElement.style.filter = '';
+    } else {
+      imgPreviewElement.style.filter = EffectParameter[currentEffectName].PROPERTY + '(' + getFilterValue(currentEffectName, value) + ')';
+    }
+    setPinPosition(value);
+  }
+
+  function setPinPosition(value) {
+    effectPinElement.style.left = value + '%';
+    effectLevelValueElement.value = Math.round(value);
+    effectDepthElement.style.width = effectPinElement.style.left;
+  }
+
+  function setDefaultEffect() {
+    defaultElement.checked = true;
+    imgPreviewElement.classList = '';
+    imgPreviewElement.style.filter = '';
+    imgPreviewElement.classList.add('effects__preview--' + DEFAULT_EFFECT);
+    effectLevelElement.classList.add('hidden');
+    setPinPosition(PinValue.DEFAULT);
+  }
+
+  function onImageEffectClick(evt) {
+    var target = evt.target;
+    if (target.tagName !== 'INPUT') {
+      return;
+    }
+    imgPreviewElement.classList = '';
+    currentEffectName = target.value;
+    imgPreviewElement.classList.add('effects__preview--' + currentEffectName);
+    imgPreviewElement.style.filter = '';
+
+    if (currentEffectName === DEFAULT_EFFECT) {
+      effectLevelElement.classList.add('hidden');
+    } else {
+      effectLevelElement.classList.remove('hidden');
+    }
+    effectLevelValueElement.value = EffectValue.DEFAULT;
+    applyEffect(EffectValue.DEFAULT);
+    setPinPosition();
+  }
+
+  function getFilterValue(effect, value) {
+    return value * (EffectParameter[effect].MAX_VALUE - EffectParameter[effect].MIN_VALUE) / EffectValue.MAX + EffectParameter[effect].MIN_VALUE + EffectParameter[effect].UNIT;
+  }
+
+  function onMouseDown(evt) {
+    var startCoordX = evt.clientX;
+    var sliderEffectLineRect = effectLevelLineElement.getBoundingClientRect();
+    var clickedPosition = (startCoordX - sliderEffectLineRect.left) / sliderEffectLineRect.width * 100;
+
+    setPinPosition(clickedPosition);
+    applyEffect(clickedPosition);
+
+    var onMouseMove = function (moveEvt) {
+      var shiftX = startCoordX - moveEvt.clientX;
+      startCoordX = moveEvt.clientX;
+      var movePosition = (effectPinElement.offsetLeft - shiftX) / sliderEffectLineRect.width * 100;
+
+      if (movePosition <= PinValue.MIN) {
+        movePosition = PinValue.MIN;
+        effectLevelValueElement.value = PinValue.MIN;
+      } else if (movePosition >= PinValue.MAX) {
+        movePosition = PinValue.MAX;
+        effectLevelValueElement.value = PinValue.MAX;
+      }
+      applyEffect(movePosition);
+    };
+
+    var onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mousemove', onMouseUp);
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  }
+
+  effectsListElement.addEventListener('click', onImageEffectClick);
+  effectLevelLineElement.addEventListener('mousedown', onMouseDown);
+
+  window.effects = {
+    setDefaultEffect: setDefaultEffect,
+    PinValue: PinValue
   };
-
-  // uploadFormSelectElement.addEventListener('submit', function (evt) {
-  //   window.upload(new FormData(uploadFormSelectElement), onSuccess, onError);
-  //   uploadSendButtonElement.disabled = true;
-  //   evt.preventDefault();
-  // });
-
-  uploadSendButtonElement.addEventListener('submit', function (evt) {
-    window.upload(new FormData(uploadSendButtonElement), onSuccess, onError);
-    uploadSendButtonElement.disabled = true;
-    evt.preventDefault();
-  });
-
 })();

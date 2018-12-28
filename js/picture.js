@@ -39,19 +39,9 @@
   }
 
   var onError = function (errorMessage) {
-    var node = document.createElement('div');
-    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: #232321;';
-    node.style.position = 'absolute';
-    node.style.left = '50%';
-    node.style.top = '40%';
-    node.style.padding = '40px';
-    node.style.transform = 'translate(-50%, -50%)';
-    node.style.fontSize = '30px';
-    node.style.border = '12px groove #e6d71e';
-    node.textContent = errorMessage;
-    document.body.insertAdjacentElement('afterbegin', node);
+    window.error.show(errorMessage);
   };
 
-  window.load(onLoad, onError);
+  window.backend.load(onLoad, onError);
 
 })();
