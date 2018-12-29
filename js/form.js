@@ -2,6 +2,7 @@
 
 (function () {
 
+  var formElement = document.querySelector('.img-upload__form');
   var uploadElement = document.querySelector('.img-upload');
   var uploadFileElement = uploadElement.querySelector('#upload-file');
   var uploadSendButtonElement = uploadElement.querySelector('.img-upload__submit');
@@ -61,20 +62,10 @@
     window.success.show();
   };
 
-  // uploadFormSelectElement.addEventListener('submit', function (evt) {
-  //   window.upload(new FormData(uploadFormSelectElement), onSuccess, onError);
-  //   uploadSendButtonElement.disabled = true;
-  //   evt.preventDefault();
-  // });
-
-  uploadSendButtonElement.addEventListener('submit', function (evt) {
-    window.upload(new FormData(uploadSendButtonElement), onSuccess, onError);
+  formElement.addEventListener('submit', function (evt) {
+    window.backend.upload(new FormData(formElement), onSuccess, onError);
     uploadSendButtonElement.disabled = true;
     evt.preventDefault();
   });
-
-  window.form = {
-    closeForm: closeForm
-  };
 
 })();

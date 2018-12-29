@@ -25,7 +25,7 @@
           onSuccess(xhr.response);
           break;
         case Code.INTERNAL_SERVER_ERROR:
-          onError('Внутренняя ошибка серевра: ' + xhr.status + ' ' + xhr.statusText);
+          onError('Внутренняя ошибка сервера: ' + xhr.status + ' ' + xhr.statusText);
           break;
         case Code.NOT_FOUND:
           onError('404 Not Found');
