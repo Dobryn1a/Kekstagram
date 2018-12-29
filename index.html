@@ -72,7 +72,7 @@
                 <fieldset class="img-upload__effects  effects">
                   <ul class="effects__list">
                     <li class="effects__item">
-                      <input type="radio" class="effects__radio  visually-hidden" name="effect" id="effect-none" value="none">
+                      <input type="radio" class="effects__radio  visually-hidden" name="effect" id="effect-none" value="none" checked>
                       <label for="effect-none" class="effects__label">
                         <span class="effects__preview  effects__preview--none">Превью фото без эффекта</span>
                         Оригинал
@@ -210,7 +210,7 @@
 
   <!-- Сообщение с ошибкой загрузки изображения -->
   <template id="error">
-    <section class="error">
+    <section class="error modal">
       <div class="error__inner">
         <h2 class="error__title">Ошибка загрузки файла</h2>
         <div class="error__buttons">
@@ -223,7 +223,7 @@
 
   <!-- Сообщение об успешной загрузке изображения -->
   <template id="success">
-    <section class="success">
+    <section class="success modal">
       <div class="success__inner">
         <h2 class="success__title">Изображение успешно загружено</h2>
         <button type="button" class="success__button">Круто!</button>
@@ -238,11 +238,14 @@
 
 <!-- <script src="js/pictures.js"></script> -->
   <script src="js/util.js"></script>
+  <script src="js/backend.js"></script>
   <script src="js/data.js"></script>
   <script src="js/validation.js"></script>
   <script src="js/scale.js"></script>
-  <script src="js/photo-effect.js"></script>
+  <script src="js/effects.js"></script>
   <script src="js/form.js"></script>
+  <script src="js/error.js"></script>
+  <script src="js/succes.js"></script>
   <script src="js/picture.js"></script>
   <script src="js/preview.js"></script>
   <script src="js/gallery.js"></script>
