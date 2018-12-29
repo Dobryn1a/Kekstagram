@@ -4,7 +4,7 @@
 
   var Url = {
     GET: 'https://js.dump.academy/kekstagram/data',
-    POST: 'https://js.dump.academy/kekstagram2/'
+    POST: 'https://js.dump.academy/kekstagram/'
   };
 
   var TIMEOUT = 10000;
