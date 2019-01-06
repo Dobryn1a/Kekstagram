@@ -2,9 +2,7 @@
 
 (function () {
 
-  // var PHOTOS_COUNT = 25;
-
-  var pictures = [];
+  var photos = [];
 
   var photosNew = {
     MIN: 0,
@@ -30,7 +28,7 @@
     return photoElement;
   }
 
-  function appendPicture() {
+  function appendPicture(pictures) {
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < pictures.length; i++) {
       fragment.appendChild(renderPhoto(pictures[i]));
@@ -46,13 +44,13 @@
     });
     switch (target.id) {
       case 'filter-popular':
-        onLoad(picture);
+        onLoad(photos);
         break;
       case 'filter-new':
-        onLoad(getNewPhotos(picture));
+        onLoad(getNewPhotos(photos));
         break;
       case 'filter-discussed':
-        onLoad(sortingByComments(picture));
+        onLoad(sortingByComments(photos));
         break;
     }
   }
@@ -85,25 +83,9 @@
 
   function onLoad(data) {
     filterElement.classList.remove('img-filters--inactive');
-    pictures = data;
-    appendPicture(pictures);
+    photos = data;
+    appendPicture(photos);
   }
-
-  // function appendPicture(pictures) {
-  //   var fragment = document.createDocumentFragment();
-  //   for (var i = 0; i < pictures.length; i++) {
-  //     fragment.appendChild(renderPhoto(pictures[i]));
-  //   }
-  //   picturesBlock.appendChild(fragment);
-  // }
-
-  // function onLoad(photos) {
-  //   var fragment = document.createDocumentFragment();
-  //   for (var i = 0; i < photos.length; i++) {
-  //     fragment.appendChild(renderPhoto(photos[i]));
-  //   }
-  //   picturesBlock.appendChild(fragment);
-  // }
 
   function onError(errorMessage) {
     window.error.show(errorMessage);
