@@ -44,13 +44,13 @@
     });
     switch (target.id) {
       case 'filter-popular':
-        onLoad(photos);
+        appendPicture(photos);
         break;
       case 'filter-new':
-        onLoad(getNewPhotos(photos));
+        appendPicture(getNewPhotos(photos));
         break;
       case 'filter-discussed':
-        onLoad(sortingByComments(photos));
+        appendPicture(sortingByComments(photos));
         break;
     }
   }
