@@ -30,6 +30,7 @@
 
   uploadFormSelectElement.addEventListener('change', function () {
     openForm();
+    window.fileReader.init();
   });
 
   uploadPopupCloseElement.addEventListener('click', function () {
