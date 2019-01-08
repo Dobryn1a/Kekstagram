@@ -4,17 +4,33 @@
 
   var DISPLAY_COMMENTS = 5;
 
-  // var Avatar = {
-  //   MIN: 1,
-  //   MAX: 6
-  // };
+  var SliceValue = {
+    START: 0,
+    END: 5
+  };
 
   var bigPicture = document.querySelector('.big-picture');
   var socialLoader = document.querySelector('.comments-loader');
   var commentsCount = document.querySelector('.social__comment-count');
-  socialLoader.classList.add('visually-hidden');
-  commentsCount.classList.add('visually-hidden');
+  // socialLoader.classList.add('visually-hidden');
+  // commentsCount.classList.add('visually-hidden');
   var commentTemplate = document.querySelector('#comment').content.querySelector('.social__comment');
+
+  function loadComments(evt) {
+    var commentElements = bigPicture.querySelectorAll('.social__comment.visually-hidden');
+    [].slice.call(commentElements).slice(SliceValue.START, SliceValue.END).forEach(function (item) {
+      item.classList.remove('visually-hidden');
+    });
+    if (bigPicture.querySelectorAll('.social__comment.visually-hidden').length === 0) {
+      evt.target.classList.add('visually-hidden');
+    }
+  }
+
+  function showCommentsCount(comments) {
+    var displayedComments = bigPicture.querySelectorAll('.social__comment:not(.visually-hidden)').length;
+    var commentsCountElement = displayedComments + ' из ' + '<span class="comments-count">' + comments.length + '</span>' + ' комментариев';
+    commentsCount.innerHTML = commentsCountElement;
+  }
 
   function createComment(comment) {
     var commentElement = commentTemplate.cloneNode(true);
@@ -42,13 +58,22 @@
   function renderBigPicture(photo) {
     bigPicture.querySelector('.big-picture__img img').src = photo.url;
     bigPicture.querySelector('.likes-count').textContent = photo.likes;
-    bigPicture.querySelector('.comments-count').textContent = photo.comments.length;
+    // bigPicture.querySelector('.comments-count').textContent = photo.comments.length;
     bigPicture.querySelector('.social__caption').textContent = photo.description;
     renderComments(photo.comments);
+    showCommentsCount(photo.comments);
+    bigPicture.querySelector('.comments-loader').addEventListener('click', loadComments);
+    bigPicture.querySelector('.comments-loader').addEventListener('click', function () {
+      showCommentsCount(photo.comments);
+    });
+    if (bigPicture.querySelectorAll('.social__comment.visually-hidden').length > 1) {
+      socialLoader.classList.remove('visually-hidden');
+    }
   }
 
   window.preview = {
-    renderBigPicture: renderBigPicture
+    renderBigPicture: renderBigPicture,
+    loadComments: loadComments
   };
 
 })();
