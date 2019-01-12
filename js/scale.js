@@ -14,7 +14,12 @@
   var scaleValueElement = scaleElement.querySelector('.scale__control--value');
   var scaleSmallerElement = scaleElement.querySelector('.scale__control--smaller');
   var scaleBiggerElement = scaleElement.querySelector('.scale__control--bigger');
-  var imgPreviewWrapperElement = uploadElement.querySelector('.img-upload__preview');
+  var imgPreviewWrapperElement = uploadElement.querySelector('.img-upload__preview img');
+
+  var setDefaultScale = function () {
+    scaleValueElement.value = 100 + '%';
+    imgPreviewWrapperElement.style = '';
+  };
 
   function setPhotoScale(value) {
     var currentScale = parseInt(scaleValueElement.value, 10);
@@ -33,5 +38,9 @@
   scaleBiggerElement.addEventListener('click', function () {
     setPhotoScale(1);
   });
+
+  window.scale = {
+    setDefaultScale: setDefaultScale
+  };
 
 })();

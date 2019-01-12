@@ -2,21 +2,21 @@
 
 (function () {
 
-  var bigPicture = document.querySelector('.big-picture');
-  var bigPictureCancel = bigPicture.querySelector('.big-picture__cancel');
+  var bigPictureElement = document.querySelector('.big-picture');
+  var bigPictureCancelElement = bigPictureElement.querySelector('.big-picture__cancel');
 
-  bigPictureCancel.addEventListener('click', function () {
+  bigPictureCancelElement.addEventListener('click', function () {
     closePhoto();
   });
 
   function closePhoto() {
-    bigPicture.classList.add('hidden');
-    bigPicture.querySelector('.comments-loader').removeEventListener('click', window.preview.loadComments);
+    bigPictureElement.classList.add('hidden');
+    bigPictureElement.querySelector('.comments-loader').removeEventListener('click', window.preview.loadComments);
   }
 
   function openPhoto() {
-    bigPicture.classList.remove('hidden');
-    bigPicture.querySelector('.social__comments').innerHTML = '';
+    bigPictureElement.classList.remove('hidden');
+    bigPictureElement.querySelector('.social__comments').innerHTML = '';
     document.addEventListener('keydown', onPhotoEscPress);
   }
 
@@ -25,7 +25,6 @@
   }
 
   window.gallery = {
-    openPhoto: openPhoto,
-    closePhoto: closePhoto
+    openPhoto: openPhoto
   };
 })();

@@ -2,9 +2,6 @@
 
 (function () {
   window.util = {
-    getRandomNumber: function (min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    },
     getRandomElement: function (element) {
       return element[Math.floor(Math.random() * element.length)];
     },
@@ -14,11 +11,6 @@
     },
     isEscEvent: function (evt, action) {
       if (evt.keyCode === window.util.KeyCode.ESC) {
-        action();
-      }
-    },
-    isEnterEvent: function (evt, action) {
-      if (evt.keyCode === window.util.KeyCode.ENTER) {
         action();
       }
     },
