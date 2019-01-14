@@ -16,10 +16,10 @@
   var scaleBiggerElement = scaleElement.querySelector('.scale__control--bigger');
   var imgPreviewElement = uploadElement.querySelector('.img-upload__preview img');
 
-  var setDefaultScale = function () {
+  function setDefaultScale() {
     scaleValueElement.value = 100 + '%';
     imgPreviewElement.style = '';
-  };
+  }
 
   function setPhotoScale(value) {
     var currentScale = parseInt(scaleValueElement.value, 10);

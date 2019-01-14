@@ -119,7 +119,7 @@
     setPinPosition(clickedPosition);
     applyEffect(clickedPosition);
 
-    var onMouseMove = function (moveEvt) {
+    function onMouseMove(moveEvt) {
       var shiftX = startCoordX - moveEvt.clientX;
       startCoordX = moveEvt.clientX;
       var movePosition = (effectPinElement.offsetLeft - shiftX) / sliderEffectLineRect.width * 100;
@@ -132,13 +132,13 @@
         effectLevelValueElement.value = PinValue.MAX;
       }
       applyEffect(movePosition);
-    };
+    }
 
-    var onMouseUp = function (upEvt) {
+    function onMouseUp(upEvt) {
       upEvt.preventDefault();
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mousemove', onMouseUp);
-    };
+    }
 
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);

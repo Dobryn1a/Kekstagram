@@ -15,7 +15,7 @@
     INTERNAL_SERVER_ERROR: 500
   };
 
-  var createRequest = function (onSuccess, onError) {
+  function createRequest(onSuccess, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.timeout = TIMEOUT;
@@ -42,18 +42,18 @@
       onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });
     return xhr;
-  };
-  var load = function (onLoad, onError) {
+  }
+  function load(onLoad, onError) {
     var xhr = createRequest(onLoad, onError);
     xhr.open('GET', Url.GET);
     xhr.send();
-  };
+  }
 
-  var upload = function (data, onLoad, onError) {
+  function upload(data, onLoad, onError) {
     var xhr = createRequest(onLoad, onError);
     xhr.open('POST', Url.POST);
     xhr.send(data);
-  };
+  }
 
   window.backend = {
     load: load,

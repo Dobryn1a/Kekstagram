@@ -25,9 +25,9 @@
     document.removeEventListener('keydown', onFormEscPress);
   }
 
-  var onFormEscPress = function (evt) {
+  function onFormEscPress(evt) {
     window.util.isEscEvent(evt, closeForm);
-  };
+  }
 
   uploadFormSelectElement.addEventListener('change', function () {
     openForm();
@@ -54,15 +54,15 @@
     document.addEventListener('keydown', onFormEscPress);
   });
 
-  var onError = function (errorMessage) {
+  function onError(errorMessage) {
     closeForm();
     window.error.show(errorMessage);
-  };
+  }
 
-  var onSuccess = function () {
+  function onSuccess() {
     closeForm();
     window.success.show();
-  };
+  }
 
   formElement.addEventListener('submit', function (evt) {
     window.backend.upload(new FormData(formElement), onSuccess, onError);

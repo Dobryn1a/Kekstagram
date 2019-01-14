@@ -41,13 +41,16 @@
   function renderComments(comments) {
     var commentsList = bigPictureElement.querySelector('.social__comments');
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < comments.length; i++) {
-      var comment = createComment(comments[i]);
-      if (i >= DISPLAY_COMMENTS) {
+    // for (var i = 0; i < comments.length; i++) {
+    //   var comment = createComment(comments[i]);
+    //   if (i >= DISPLAY_COMMENTS) {
+    comments.forEach(function (currentItem, index) {
+      var comment = createComment(currentItem);
+      if (index >= DISPLAY_COMMENTS) {
         comment.classList.add('visually-hidden');
       }
       fragment.appendChild(comment);
-    }
+    });
     commentsList.appendChild(fragment);
   }
 
