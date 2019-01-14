@@ -21,7 +21,8 @@
   function closeForm() {
     uploadPopupElement.classList.add('hidden');
     uploadFileElement.value = null;
-    window.scale.setDefaultScale();
+    window.scale.setDefault();
+    window.effects.setDefault();
     document.removeEventListener('keydown', onFormEscPress);
   }
 

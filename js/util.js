@@ -1,16 +1,13 @@
 'use strict';
 
 (function () {
+  var KEYCODE_ESC = 27;
   window.util = {
     getRandomElement: function (element) {
       return element[Math.floor(Math.random() * element.length)];
     },
-    KeyCode: {
-      ENTER: 13,
-      ESC: 27
-    },
     isEscEvent: function (evt, action) {
-      if (evt.keyCode === window.util.KeyCode.ESC) {
+      if (evt.KEYCODE_ESC === KEYCODE_ESC) {
         action();
       }
     },

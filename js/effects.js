@@ -148,7 +148,7 @@
   effectLevelLineElement.addEventListener('mousedown', onMouseDown);
 
   window.effects = {
-    setDefaultEffect: setDefaultEffect,
+    setDefault: setDefaultEffect,
     PinValue: PinValue
   };
 })();
