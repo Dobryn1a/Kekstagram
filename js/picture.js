@@ -30,9 +30,6 @@
 
   function appendPicture(pictures) {
     var fragment = document.createDocumentFragment();
-    // for (var i = 0; i < pictures.length; i++) {
-    //   fragment.appendChild(renderPhoto(pictures[i]));
-    // }
     pictures.forEach(function (item) {
       fragment.appendChild(renderPhoto(item));
     });
